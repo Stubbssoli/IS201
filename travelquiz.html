@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #007bff;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: hwb(211 42% 26%);
+        }
+        .result {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">Soli Stubbs</a>
+            <i class="fas fa-bars"></i>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                
+                    <p class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Home</a></p>
+                
+            </div>
+        </div>
+    </nav>
+    <div class="quiz-container">
+        <h1>Travel Quiz Game</h1>
+        <div class="question-container">
+            <div class="question">Where is the Eiffel Tower located?</div>
+            <ul class="options">
+                <li><button class="option" data-answer="false">New York</button></li>
+                <li><button class="option" data-answer="true">Paris</button></li>
+                <li><button class="option" data-answer="false">London</button></li>
+                <li><button class="option" data-answer="false">Tokyo</button></li>
+            </ul>
+        </div>
+        <div class="result"></div>
+        <button id="nextBtn">Next Question</button>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        const questions = [
+            {
+                question: "Where is the Eiffel Tower located?",
+                options: ["New York", "Paris", "London", "Tokyo"],
+                correctAnswer: "Paris"
+            },
+            {
+                question: "Which country is known as the Land of the Rising Sun?",
+                options: ["China", "Japan", "Korea", "India"],
+                correctAnswer: "Japan"
+            },
+            {
+                question: "What is the largest continent?",
+                options: ["Africa", "Asia", "Europe", "Australia"],
+                correctAnswer: "Asia"
+            },
+            {
+                question: "Which city is famous for its canals?",
+                options: ["Venice", "Amsterdam", "Paris", "Berlin"],
+                correctAnswer: "Venice"
+            },
+            {
+                question: "Which country is famous for the Great Wall?",
+                options: ["China", "India", "Russia", "Germany"],
+                correctAnswer: "China"
+            },
+            {
+                question: "Which country is known for the pyramids?",
+                options: ["Mexico", "Egypt", "Italy", "Greece"],
+                correctAnswer: "Egypt"
+            },
+            {
+                question: "What is the capital of Australia?",
+                options: ["Sydney", "Melbourne", "Brisbane", "Canberra"],
+                correctAnswer: "Canberra"
+            },
+            {
+                question: "Which city is famous for the Statue of Liberty?",
+                options: ["Los Angeles", "Chicago", "New York", "San Francisco"],
+                correctAnswer: "New York"
+            },
+            {
+                question: "Which is the smallest country in the world?",
+                options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+                correctAnswer: "Vatican City"
+            },
+            {
+                question: "What is the longest river in the world?",
+                options: ["Amazon River", "Nile River", "Yangtze River", "Ganges River"],
+                correctAnswer: "Nile River"
+            },
+            {
+                question: "Which continent has the most countries?",
+                options: ["Africa", "Asia", "Europe", "North America"],
+                correctAnswer: "Africa"
+            },
+            {
+                question: "Which city is home to the Colosseum?",
+                options: ["Athens", "Rome", "Paris", "Madrid"],
+                correctAnswer: "Rome"
+            },
+            {
+                question: "What is the capital of Canada?",
+                options: ["Vancouver", "Toronto", "Ottawa", "Montreal"],
+                correctAnswer: "Ottawa"
+            },
+            {
+                question: "Which country is famous for its kangaroos?",
+                options: ["Australia", "South Africa", "Brazil", "India"],
+                correctAnswer: "Australia"
+            },
+            {
+                question: "Which country is known for the famous Carnival festival?",
+                options: ["Spain", "Brazil", "Italy", "Germany"],
+                correctAnswer: "Brazil"
+            },
+            {
+                question: "Where would you find the ancient city of Petra?",
+                options: ["Jordan", "Turkey", "Egypt", "Greece"],
+                correctAnswer: "Jordan"
+            },
+            {
+                question: "Which city is known as the 'Big Apple'?",
+                options: ["Los Angeles", "Chicago", "New York", "Miami"],
+                correctAnswer: "New York"
+            },
+            {
+                question: "What is the official language of Brazil?",
+                options: ["Spanish", "Portuguese", "English", "French"],
+                correctAnswer: "Portuguese"
+            },
+            {
+                question: "What is the tallest mountain in the world?",
+                options: ["Mount Kilimanjaro", "Mount Everest", "Mount Fuji", "K2"],
+                correctAnswer: "Mount Everest"
+            },
+            {
+                question: "Which famous landmark is located in Rio de Janeiro?",
+                options: ["Christ the Redeemer", "The Great Wall", "The Eiffel Tower", "The Colosseum"],
+                correctAnswer: "Christ the Redeemer"
+            }
+        ];
+
+        const questionContainer = document.querySelector('.question-container');
+        const resultDiv = document.querySelector('.result');
+        const nextButton = document.getElementById('nextBtn');
+        
+        // Function to display the current question
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            const questionText = question.question;
+            const options = question.options;
+
+            questionContainer.innerHTML = `
+                <div class="question">${questionText}</div>
+                <ul class="options">
+                    ${options.map(option => `<li><button class="option" data-answer="${option === question.correctAnswer}">${option}</button></li>`).join('')}
+                </ul>
+            `;
+        }
+
+        // Function to handle user's answer
+        function handleAnswer(event) {
+            const selectedOption = event.target;
+            const isCorrect = selectedOption.getAttribute('data-answer') === "true";
+            if (isCorrect) {
+                resultDiv.textContent = "Correct! Well done!";
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.textContent = "Oops! That's not right. Try again!";
+                resultDiv.style.color = "red";
+            }
+        }
+
+        // Add event listener to each option
+        document.body.addEventListener('click', function (e) {
+            if (e.target.classList.contains('option')) {
+                handleAnswer(e);
+            }
+        });
+
+        // Load the first question and set up the next button
+        function setupNextButton() {
+            nextButton.addEventListener('click', function() {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    displayQuestion();
+                    resultDiv.textContent = '';
+                } else {
+                    resultDiv.textContent = 'You completed the quiz! Great job!';
+                    nextButton.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize the quiz
+        displayQuestion();
+        setupNextButton();
+    </script>
+</body>
+</html>
